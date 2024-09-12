@@ -61,3 +61,62 @@ rtmp{
 }
 }
 }
+```
+2. Criaremos agora uma app de servidor HTTP, para entrega dos pacotes HLS e para servir nosso website
+```conf
+server {
+    listen 8080;
+    server_name nome.do.servidor.com; #como temos uma página web para ser servida, acrescentamos a sua URL aqui
+
+    location /hls {
+        add_header Cache-Control no-cache;
+
+        # CORS são políticas usadas por navegadores web para saber quais pontos de origem podem carregar conteúdo
+        add_header 'Access-Control-Allow-Origin' '*' always;
+        add_header 'Access-Control-Expose-Headers' 'Content-Length';
+
+        # Mais configurações de CORS
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain charset=UTF-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+
+        types {
+            application/vnd.apple.mpegurl m3u8;
+            video/mp2t ts;
+        }
+
+        root /mnt/;
+}
+}
+```
+## Iniciando e operando o NGINX
+Por padrão o ningx é instalado no local /usr/local/nginx/sbin/nginx, mas isso pode ser diferente caso queira
+Seguem alguns comandos interessantes para saber do NGINX
+*Iniciando o NGINX no plano de fundo
+```
+/usr/local/nginx/sbin/nginx
+```
+*Iniciando o NGINX por cima do shell
+```
+/usr/local/nginx/sbin/nginx -g 'daemon off;'
+```
+*Teste de arquivo de configuração (esse é um bom comando pq indica diretamente se tem algum erro no nginx.conf)
+```
+/usr/local/nginx/sbin/nginx -t
+```
+*Interrompendo o nignx
+```
+/usr/local/nginx/sbin/nginx -s stop
+```
+
+E com isso, temos tudo que é necessário para começar a enviar conteúdo para esse servidor web
+
+Para fazer isso, na nossa fonte, precisamos nos atentar para colocar como destino:
+```
+rtmp://nome.do.servidor.com/NOME/titulo
+```
+Onde `nome.do.servidor.com` é o nome que configuramos na app http do conf, `NOME` é o nome da aplicação RTMP que também configuramos no conf e `titulo` é o nome que quisermos dar ao nosso conteúdo. Na pasta HLS dentro do nginx os pacotes serão nomeados a partir do titulo
