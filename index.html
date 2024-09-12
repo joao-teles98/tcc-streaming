@@ -1,0 +1,20 @@
+<!--Caminho da fonte do portal: /nginx/index.html-->
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Final João Pedro Dellatorre</title>
+    <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet">
+</head>
+<body>
+    <video-js id="my_video" class="vjs-default-skin" controls preload="auto" width="640" height="360">
+        <source src="http://joaoteles.duckdns.org/hls/stream.m3u8" type="application/x-mpegURL">
+    </video-js>
+    <script src="https://vjs.zencdn.net/7.8.4/video.js"></script>
+    <script>
+        var player = videojs('my_video');
+    </script>
+</body>
+</html>
