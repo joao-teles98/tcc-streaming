@@ -1,0 +1,15 @@
+#Local do serviço Flask: /etc/systemd/system/video-grid.service
+#Arquivo para serviço do app Flask que criamos. Com esse arquivo a gente pode configurar que o serviço seja iniciado automaticamente no inicio do servidor, garantindo que o app vai funcionar
+
+[Unit]
+Description=Flask Application
+After=network.target
+
+[Service]
+User={SEU/USERNAME}
+WorkingDirectory={CAMINHO/PARA/A/RAIZ/DO/APP}
+ExecStart={CAMINHO/PARA/O/BINARIO/DO/PYTHON} {CAMINHO/PARA/O/EXECUTÁVEL/PY}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
